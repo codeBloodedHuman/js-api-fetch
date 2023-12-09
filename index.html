@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Data Example with Promises</title>
+</head>
+<body>
+
+    <button id="myButton">Fetch Data</button>
+    <p id="result"></p>
+
+    <script>
+        function fetchData() {
+            return new Promise((resolve, reject) => {
+                fetch('https://jsonplaceholder.typicode.com/todos')
+                    .then(response => {
+                        // Check if the response is successful (status code in the range 200-299)
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        // Parse the JSON in the response and resolve the promise with the data
+                        return response.json();
+                    })
+                    .then(data => {
+                        resolve(data);
+                    })
+                    .catch(error => {
+                        // Reject the promise with the error message
+                        reject(error);
+                    });
+            });
+        }
+
+        document.getElementById('myButton').addEventListener('click', function () {
+            // Call the fetchData function which returns a promise
+            fetchData()
+                .then(data => {
+                    // Update the paragraph element with the retrieved data
+                    document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    // Display an error message in case of an error
+                    document.getElementById('result').innerText = 'Error: ' + error.message;
+                });
+        });
+    </script>
+
+</body>
+</html>
